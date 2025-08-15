@@ -288,6 +288,7 @@ func (cfg *Config) GenerateResponse() (Response, error) {
 	}
 
 	if awsCreds.SessionToken == "" {
+		log.Printf("awsCreds.SessionToken == \"\"")
 		// Convert static credentials to temporary credentials so the return value
 		// always has a session token and expiration
 		return generateResponseWithTemporaryCredentials(cfg.AwsConfig)
@@ -297,8 +298,10 @@ func (cfg *Config) GenerateResponse() (Response, error) {
 	var expirationTime time.Time
 	if !awsCreds.Expires.IsZero() {
 		expirationTime = awsCreds.Expires
+		log.Printf("!awsCreds.Expires.IsZero() is true - expirationTime is %s", expirationTime.String())
 	} else {
 		expirationTime = time.Now().Add(time.Hour)
+		log.Printf("!awsCreds.Expires.IsZero() is false - expirationTime is %s", expirationTime.String())
 	}
 
 	// time.Time has a method of .String() but it returns it in a format we can't use.
